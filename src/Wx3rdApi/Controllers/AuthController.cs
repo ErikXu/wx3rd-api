@@ -48,7 +48,7 @@ namespace Wx3rdApi.Controllers
             var loginResponse = await _wx3rdService.Login(loginInfo.Host, loginRequest);
             if (loginResponse.Code != 0)
             {
-                return BadRequest(new { loginResponse.ErrorMsg });
+                return BadRequest(loginResponse);
             }
 
             loginInfo.Jwt = loginResponse.Data.Jwt;
@@ -73,7 +73,7 @@ namespace Wx3rdApi.Controllers
                 return Ok(loginInfo);
             }
 
-            return NotFound();
+            return Unauthorized();
         }
 
         private static string CreateMd5(string input)

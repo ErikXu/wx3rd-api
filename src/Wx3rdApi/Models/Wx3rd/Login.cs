@@ -44,14 +44,8 @@ namespace Wx3rdApi.Models.Wx3rd
         public string Password { get; set; }
     }
 
-    public class LoginResponse
+    public class LoginResponse: BaseResponse
     {
-        [JsonProperty("code")]
-        public int Code { get; set; }
-
-        [JsonProperty("errorMsg")]
-        public string ErrorMsg { get; set; }
-
         [JsonProperty("data")]
         public LoginData Data { get; set; }
     }
