@@ -33,7 +33,7 @@ namespace Wx3rdApi.Services
             var response = await restClient.ExecuteAsync(request, Method.Put);
 
             var baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response.Content);
-            if (baseResponse.Code == 0)
+            if (baseResponse.code == 0)
             {
                 var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(response.Content);
                 return loginResponse;
@@ -42,8 +42,8 @@ namespace Wx3rdApi.Services
             {
                 return new LoginResponse
                 {
-                    Code = baseResponse.Code,
-                    ErrorMsg = baseResponse.ErrorMsg
+                    code = baseResponse.code,
+                    errorMsg = baseResponse.errorMsg
                 };
             }
         }
@@ -58,7 +58,7 @@ namespace Wx3rdApi.Services
             var response = await restClient.GetAsync(request);
 
             var baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response.Content);
-            if (baseResponse.Code == 0)
+            if (baseResponse.code == 0)
             {
                 var getComponentAccessTokenResponse = JsonConvert.DeserializeObject<GetComponentAccessTokenResponse>(response.Content);
                 return getComponentAccessTokenResponse;
@@ -67,8 +67,8 @@ namespace Wx3rdApi.Services
             {
                 return new GetComponentAccessTokenResponse
                 {
-                    Code = baseResponse.Code,
-                    ErrorMsg = baseResponse.ErrorMsg
+                    code = baseResponse.code,
+                    errorMsg = baseResponse.errorMsg
                 };
             }
         }

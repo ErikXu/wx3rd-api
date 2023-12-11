@@ -6,6 +6,9 @@ using Wx3rdApi.Services;
 
 namespace Wx3rdApi.Controllers
 {
+    /// <summary>
+    /// 认证管理
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -41,17 +44,17 @@ namespace Wx3rdApi.Controllers
 
             var loginRequest = new LoginRequest
             {
-                Username = loginInfo.Username,
-                Password = loginInfo.PasswordMd5
+                username = loginInfo.Username,
+                password = loginInfo.PasswordMd5
             };
 
             var loginResponse = await _wx3rdService.Login(loginInfo.Host, loginRequest);
-            if (loginResponse.Code != 0)
+            if (loginResponse.code != 0)
             {
                 return BadRequest(loginResponse);
             }
 
-            loginInfo.Jwt = loginResponse.Data.Jwt;
+            loginInfo.Jwt = loginResponse.data.jwt;
 
             var uuid = Guid.NewGuid().ToString();
             var exp = DateTimeOffset.UtcNow.AddMinutes(20);

@@ -1,13 +1,9 @@
-﻿using Newtonsoft.Json;
-
-namespace Wx3rdApi.Models.Wx3rd
+﻿namespace Wx3rdApi.Models.Wx3rd
 {
     public class BaseResponse
     {
-        [JsonProperty("code")]
-        public int Code { get; set; }
+        public int code { get; set; }
 
-        [JsonProperty("errorMsg")]
-        public string ErrorMsg { get; set; }
+        public string errorMsg { get; set; }
     }
 }

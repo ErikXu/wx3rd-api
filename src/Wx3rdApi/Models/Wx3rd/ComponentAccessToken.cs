@@ -1,16 +1,12 @@
-﻿using Newtonsoft.Json;
-
-namespace Wx3rdApi.Models.Wx3rd
+﻿namespace Wx3rdApi.Models.Wx3rd
 {
     public class GetComponentAccessTokenResponse: BaseResponse
     {
-        [JsonProperty("data")]
-        public GetComponentAccessTokenData Data { get; set; }
+        public GetComponentAccessTokenData data { get; set; }
     }
 
     public class GetComponentAccessTokenData
     {
-        [JsonProperty("token")]
-        public string Token { get; set; }
+        public string token { get; set; }
     }
 }

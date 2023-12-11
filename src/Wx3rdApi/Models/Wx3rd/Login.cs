@@ -37,22 +37,18 @@ namespace Wx3rdApi.Models.Wx3rd
 
     public class LoginRequest
     {
-        [JsonProperty("username")]
-        public string Username { get; set; }
+        public string username { get; set; }
 
-        [JsonProperty("password")]
-        public string Password { get; set; }
+        public string password { get; set; }
     }
 
     public class LoginResponse: BaseResponse
     {
-        [JsonProperty("data")]
-        public LoginData Data { get; set; }
+        public LoginData data { get; set; }
     }
 
     public class LoginData
     {
-        [JsonProperty("jwt")]
-        public string Jwt { get; set; }
+        public string jwt { get; set; }
     }
 }
