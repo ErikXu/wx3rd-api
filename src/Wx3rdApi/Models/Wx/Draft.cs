@@ -1,9 +1,7 @@
 ﻿namespace Wx3rdApi.Models.Wx
 {
-    public class ListDraftResponse
+    public class ListDraftResponse: BaseResponse
     {
-        public int errcode { get; set; }
-        public string errmsg { get; set; }
         public List<Draft> draft_list { get; set; }
     }
 

@@ -12,12 +12,11 @@ namespace Wx3rdApi.Controllers
     [ApiController]
     public class TokensController : ControllerBase
     {
-        private readonly IMemoryCache _cache;
-        private readonly IWx3rdService _wx3rdService;
-        public TokensController(IMemoryCache cache, IWx3rdService wx3rdService)
+        private readonly IAuthService _authService;
+
+        public TokensController(IAuthService authService)
         {
-            _cache = cache;
-            _wx3rdService = wx3rdService;
+            _authService = authService;
         }
 
         /// <summary>
@@ -25,28 +24,15 @@ namespace Wx3rdApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("component-access-token")]
-        public async Task<IActionResult> GetComponentAccessToken()
+        public IActionResult GetComponentAccessToken()
         {
-            if (Request.Cookies.TryGetValue("uuid", out var uuid))
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
             {
-                var loginInfo = _cache.Get<LoginInfo>(uuid);
-                if (loginInfo == null)
-                {
-                    return Unauthorized();
-                }
-
-                var getComponentAccessTokenResponse = await _wx3rdService.GetComponentAccessToken(loginInfo.Host, loginInfo.Jwt);
-                if (getComponentAccessTokenResponse.code != 0)
-                {
-                    return BadRequest(getComponentAccessTokenResponse);
-                }
-                else
-                {
-                    return Ok(getComponentAccessTokenResponse);
-                }
+                return Unauthorized();
             }
 
-            return Unauthorized();
+            return Ok(loginInfo.ComponentAccessToken);
         }
     }
 }

@@ -33,6 +33,8 @@ namespace Wx3rdApi.Models.Wx3rd
     public class LoginInfo : LoginForm
     {
         public string Jwt { get; set; }
+
+        public string ComponentAccessToken { get; set; }
     }
 
     public class LoginRequest

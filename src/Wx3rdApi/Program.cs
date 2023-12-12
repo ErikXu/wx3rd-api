@@ -26,6 +26,7 @@ internal class Program
 
         builder.Services.AddMemoryCache();
         builder.Services.AddHttpClient();
+        builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IWx3rdService, Wx3rdService>();
         builder.Services.AddScoped<IWxService, WxService>();
 

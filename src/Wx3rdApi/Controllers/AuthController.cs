@@ -15,6 +15,7 @@ namespace Wx3rdApi.Controllers
     {
         private readonly IMemoryCache _cache;
         private readonly IWx3rdService _wx3rdService;
+
         public AuthController(IMemoryCache cache, IWx3rdService wx3rdService)
         {
             _cache = cache;
@@ -56,6 +57,14 @@ namespace Wx3rdApi.Controllers
 
             loginInfo.Jwt = loginResponse.data.jwt;
 
+            var getComponentAccessTokenResponse = await _wx3rdService.GetComponentAccessToken(loginInfo.Host, loginInfo.Jwt);
+            if (getComponentAccessTokenResponse.code != 0)
+            {
+                return BadRequest(getComponentAccessTokenResponse);
+            }
+
+            loginInfo.ComponentAccessToken = getComponentAccessTokenResponse.data.token;
+
             var uuid = Guid.NewGuid().ToString();
             var exp = DateTimeOffset.UtcNow.AddMinutes(20);
             _cache.Set(uuid, loginInfo, exp);
@@ -73,6 +82,11 @@ namespace Wx3rdApi.Controllers
             if (Request.Cookies.TryGetValue("uuid", out var uuid))
             {
                 var loginInfo = _cache.Get<LoginInfo>(uuid);
+                if (loginInfo == null)
+                {
+                    return Unauthorized();
+                }
+
                 return Ok(loginInfo);
             }
 

@@ -7,6 +7,8 @@ namespace Wx3rdApi.Services
     public interface IWxService
     {
         Task<ListDraftResponse> ListDraft(string componentAccessToken);
+
+        Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType);
     }
 
     public class WxService: IWxService
@@ -29,6 +31,18 @@ namespace Wx3rdApi.Services
 
             var listDraftResponse = JsonConvert.DeserializeObject<ListDraftResponse>(response.Content);
             return listDraftResponse;
+        }
+
+        public async Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType)
+        {
+            var url = $"https://api.weixin.qq.com/wxa/gettemplatelist?access_token={componentAccessToken}&template_type={templateType}";
+            var request = new RestRequest(url);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.GetAsync(request);
+
+            var listTemplateResponse = JsonConvert.DeserializeObject<ListTemplateResponse>(response.Content);
+            return listTemplateResponse;
         }
     }
 }
