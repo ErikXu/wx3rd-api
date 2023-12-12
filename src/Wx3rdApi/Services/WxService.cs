@@ -9,6 +9,8 @@ namespace Wx3rdApi.Services
         Task<ListDraftResponse> ListDraft(string componentAccessToken);
 
         Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType);
+
+        Task<DeleteTemplateResponse> DeleteTemplate(string componentAccessToken, int templateId);
     }
 
     public class WxService: IWxService
@@ -43,6 +45,26 @@ namespace Wx3rdApi.Services
 
             var listTemplateResponse = JsonConvert.DeserializeObject<ListTemplateResponse>(response.Content);
             return listTemplateResponse;
+        }
+
+        public async Task<DeleteTemplateResponse> DeleteTemplate(string componentAccessToken, int templateId)
+        {
+            var url = $"https://api.weixin.qq.com/wxa/deletetemplate?access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var deleteTemplateRequest = new DeleteTemplateRequest
+            {
+                template_id = templateId
+            };
+
+            var body = JsonConvert.SerializeObject(deleteTemplateRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var deleteTemplateResponse = JsonConvert.DeserializeObject<DeleteTemplateResponse>(response.Content);
+            return deleteTemplateResponse;
         }
     }
 }

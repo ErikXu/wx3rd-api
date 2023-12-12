@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Wx3rdApi.Models.Wx3rd;
 using Wx3rdApi.Services;
 
 namespace Wx3rdApi.Controllers
@@ -8,7 +6,7 @@ namespace Wx3rdApi.Controllers
     /// <summary>
     /// 凭证管理
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/tokens")]
     [ApiController]
     public class TokensController : ControllerBase
     {

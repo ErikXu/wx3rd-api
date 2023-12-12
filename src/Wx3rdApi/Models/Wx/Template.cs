@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wx3rdApi.Models.Wx
 {
@@ -37,5 +38,23 @@ namespace Wx3rdApi.Models.Wx
         public int template_type { get; set; }
 
         public object[] category_list { get; set; }
+    }
+
+    public class DeleteTemplateForm
+    {
+        /// <summary>
+        /// 模板 Id
+        /// </summary>
+        [Required]
+        public int TemplateId { get; set; }
+    }
+
+    public class DeleteTemplateRequest
+    {
+        public int template_id { get; set; }
+    }
+
+    public class DeleteTemplateResponse : BaseResponse
+    {
     }
 }

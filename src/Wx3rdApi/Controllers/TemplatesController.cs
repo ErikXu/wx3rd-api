@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Wx3rdApi.Models.Wx;
-using Wx3rdApi.Models.Wx3rd;
 using Wx3rdApi.Services;
 
 namespace Wx3rdApi.Controllers
@@ -9,18 +7,16 @@ namespace Wx3rdApi.Controllers
     /// <summary>
     /// 小程序模板库管理：https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/operation/thirdparty/template.html
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/templates")]
     [ApiController]
     public class TemplatesController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IWx3rdService _wx3rdService;
         private readonly IWxService _wxService;
 
-        public TemplatesController(IAuthService authService, IWx3rdService wx3rdService, IWxService wxService)
+        public TemplatesController(IAuthService authService, IWxService wxService)
         {
             _authService = authService;
-            _wx3rdService = wx3rdService;
             _wxService = wxService;
         }
 
@@ -69,6 +65,30 @@ namespace Wx3rdApi.Controllers
             else
             {
                 return Ok(listTemplateResponse);
+            }
+        }
+
+        /// <summary>
+        /// 删除指定代码模板：https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/deletetemplate.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTemplate([FromQuery] DeleteTemplateForm form)
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var deleteTemplateResponse = await _wxService.DeleteTemplate(loginInfo.ComponentAccessToken, form.TemplateId);
+            if (deleteTemplateResponse.errcode != 0)
+            {
+                return BadRequest(deleteTemplateResponse);
+            }
+            else
+            {
+                return Ok(deleteTemplateResponse);
             }
         }
     }

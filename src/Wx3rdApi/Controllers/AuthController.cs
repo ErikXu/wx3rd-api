@@ -9,7 +9,7 @@ namespace Wx3rdApi.Controllers
     /// <summary>
     /// 认证管理
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
