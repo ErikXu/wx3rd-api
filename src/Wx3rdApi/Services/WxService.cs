@@ -13,6 +13,8 @@ namespace Wx3rdApi.Services
         Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType);
 
         Task<DeleteTemplateResponse> DeleteTemplate(string componentAccessToken, int templateId);
+
+        Task<ModifyThirdpartyServerDomainResponse> ModifyThirdpartyServerDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaServerDomain);
     }
 
     public class WxService: IWxService
@@ -88,6 +90,28 @@ namespace Wx3rdApi.Services
 
             var deleteTemplateResponse = JsonConvert.DeserializeObject<DeleteTemplateResponse>(response.Content);
             return deleteTemplateResponse;
+        }
+
+        public async Task<ModifyThirdpartyServerDomainResponse> ModifyThirdpartyServerDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaServerDomain)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/component/modify_wxa_server_domain?access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var modifyThirdpartyServerDomainRequest = new ModifyThirdpartyServerDomainRequest
+            {
+               action = action,
+               is_modify_published_together = isModifyPublishedTogether,
+               wxa_server_domain = wxaServerDomain
+            };
+
+            var body = JsonConvert.SerializeObject(modifyThirdpartyServerDomainRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var modifyThirdpartyServerDomainResponse = JsonConvert.DeserializeObject<ModifyThirdpartyServerDomainResponse>(response.Content);
+            return modifyThirdpartyServerDomainResponse;
         }
     }
 }
