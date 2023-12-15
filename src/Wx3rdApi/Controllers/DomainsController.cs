@@ -23,7 +23,7 @@ namespace Wx3rdApi.Controllers
         /// 获取第三方平台服务器域名：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/thirdparty-management/domain-mgnt/modifyThirdpartyServerDomain.html
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("3rd/server")]
         public async Task<IActionResult> GetThirdpartyServerDomain()
         {
             var loginInfo = _authService.GetLoginInfo(Request);
@@ -39,6 +39,28 @@ namespace Wx3rdApi.Controllers
             }
 
             return Ok(modifyThirdpartyServerDomain);
+        }
+
+        /// <summary>
+        /// 获取第三方平台业务域名：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/thirdparty-management/domain-mgnt/modifyThirdpartyJumpDomain.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("3rd/jump")]
+        public async Task<IActionResult> GetThirdpartyJumpDomain()
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var modifyThirdpartyJumpDomain = await _wxService.ModifyThirdpartyJumpDomain(loginInfo.ComponentAccessToken, "get", false, string.Empty);
+            if (modifyThirdpartyJumpDomain.errcode != 0)
+            {
+                return BadRequest(modifyThirdpartyJumpDomain);
+            }
+
+            return Ok(modifyThirdpartyJumpDomain);
         }
     }
 }

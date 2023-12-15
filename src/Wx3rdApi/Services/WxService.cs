@@ -15,6 +15,8 @@ namespace Wx3rdApi.Services
         Task<DeleteTemplateResponse> DeleteTemplate(string componentAccessToken, int templateId);
 
         Task<ModifyThirdpartyServerDomainResponse> ModifyThirdpartyServerDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaServerDomain);
+
+        Task<ModifyThirdpartyJumpDomainResponse> ModifyThirdpartyJumpDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaJumpH5Domain);
     }
 
     public class WxService: IWxService
@@ -112,6 +114,28 @@ namespace Wx3rdApi.Services
 
             var modifyThirdpartyServerDomainResponse = JsonConvert.DeserializeObject<ModifyThirdpartyServerDomainResponse>(response.Content);
             return modifyThirdpartyServerDomainResponse;
+        }
+
+        public async Task<ModifyThirdpartyJumpDomainResponse> ModifyThirdpartyJumpDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaJumpH5Domain)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/component/modify_wxa_jump_domain?access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var modifyThirdpartyJumpDomainRequest = new ModifyThirdpartyJumpDomainRequest
+            {
+                action = action,
+                is_modify_published_together = isModifyPublishedTogether,
+                wxa_jump_h5_domain = wxaJumpH5Domain
+            };
+
+            var body = JsonConvert.SerializeObject(modifyThirdpartyJumpDomainRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var modifyThirdpartyJumpDomainResponse = JsonConvert.DeserializeObject<ModifyThirdpartyJumpDomainResponse>(response.Content);
+            return modifyThirdpartyJumpDomainResponse;
         }
     }
 }
