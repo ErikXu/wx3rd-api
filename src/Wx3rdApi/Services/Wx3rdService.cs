@@ -11,6 +11,8 @@ namespace Wx3rdApi.Services
         Task<GetComponentAccessTokenResponse> GetComponentAccessToken(string host, string jwt);
 
         Task<ListWeAppResponse> ListWeApp(string host, string jwt, int offset, int limit);
+
+        Task<GetAuthorizerAccessTokenResponse> GetAuthorizerAccessToken(string host, string jwt, string appId);
     }
 
     public class Wx3rdService: IWx3rdService
@@ -93,6 +95,31 @@ namespace Wx3rdApi.Services
             else
             {
                 return new ListWeAppResponse
+                {
+                    code = baseResponse.code,
+                    errorMsg = baseResponse.errorMsg
+                };
+            }
+        }
+
+        public async Task<GetAuthorizerAccessTokenResponse> GetAuthorizerAccessToken(string host, string jwt, string appId)
+        {
+            var url = $"{host}/wxcomponent/admin/authorizer-access-token?appid={appId}";
+            var request = new RestRequest(url);
+            request.AddHeader("Authorization", string.Format("Bearer {0}", jwt));
+
+            using var restClient = new RestClient(new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.GetAsync(request);
+
+            var baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response.Content);
+            if (baseResponse.code == 0)
+            {
+                var getAuthorizerAccessTokenResponse = JsonConvert.DeserializeObject<GetAuthorizerAccessTokenResponse>(response.Content);
+                return getAuthorizerAccessTokenResponse;
+            }
+            else
+            {
+                return new GetAuthorizerAccessTokenResponse
                 {
                     code = baseResponse.code,
                     errorMsg = baseResponse.errorMsg
