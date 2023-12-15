@@ -8,6 +8,8 @@ namespace Wx3rdApi.Services
     {
         Task<ListDraftResponse> ListDraft(string componentAccessToken);
 
+        Task<AddTemplateResponse> AddTemplate(string componentAccessToken, int draftId, int templateType);
+
         Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType);
 
         Task<DeleteTemplateResponse> DeleteTemplate(string componentAccessToken, int templateId);
@@ -33,6 +35,27 @@ namespace Wx3rdApi.Services
 
             var listDraftResponse = JsonConvert.DeserializeObject<ListDraftResponse>(response.Content);
             return listDraftResponse;
+        }
+
+        public async Task<AddTemplateResponse> AddTemplate(string componentAccessToken, int draftId, int templateType)
+        {
+            var url = $"https://api.weixin.qq.com/wxa/addtotemplate?access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var addTemplateRequest = new AddTemplateRequest
+            {
+                draft_id = draftId,
+                template_type = templateType
+            };
+
+            var body = JsonConvert.SerializeObject(addTemplateRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var addTemplateResponse = JsonConvert.DeserializeObject<AddTemplateResponse>(response.Content);
+            return addTemplateResponse;
         }
 
         public async Task<ListTemplateResponse> ListTemplate(string componentAccessToken, int templateType)
