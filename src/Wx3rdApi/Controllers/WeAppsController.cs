@@ -7,7 +7,7 @@ namespace Wx3rdApi.Controllers
     /// <summary>
     /// 代开发小程序管理
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/weapps")]
     [ApiController]
     public class WeAppsController : ControllerBase
     {

@@ -1,12 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wx3rdApi.Models.Wx3rd
 {
     public class ListWeAppForm
     {
+        [DefaultValue(0)]
         [Required]
         public int Offset { get; set; }
 
+        [DefaultValue(15)]
         [Required]
         public int Limit { get; set; }
     }

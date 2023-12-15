@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Wx3rdApi.Models.Wx;
 using Wx3rdApi.Services;
 
 namespace Wx3rdApi.Controllers
@@ -6,17 +7,19 @@ namespace Wx3rdApi.Controllers
     /// <summary>
     /// 域名管理
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/domains")]
     [ApiController]
     public class DomainsController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IWxService _wxService;
+        private readonly IWx3rdService _wx3rdService;
 
-        public DomainsController(IAuthService authService, IWxService wxService)
+        public DomainsController(IAuthService authService, IWxService wxService, IWx3rdService wx3rdService)
         {
             _authService = authService;
             _wxService = wxService;
+            _wx3rdService = wx3rdService;
         }
 
         /// <summary>
@@ -61,6 +64,34 @@ namespace Wx3rdApi.Controllers
             }
 
             return Ok(modifyThirdpartyJumpDomain);
+        }
+
+        /// <summary>
+        /// 获取发布后生效服务器域名列表：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/getEffectiveServerDomain.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("app/server/effective")]
+        public async Task<IActionResult> GetAppEffectiveServerDomain([FromQuery] GetAppDomainForm form)
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var getAuthorizerAccessTokenResponse = await _wx3rdService.GetAuthorizerAccessToken(loginInfo.Host, loginInfo.Jwt, form.AppId);
+            if (getAuthorizerAccessTokenResponse.code != 0)
+            {
+                return BadRequest(getAuthorizerAccessTokenResponse);
+            }
+
+            var getAppEffectiveServerDomainResponse = await _wxService.GetAppEffectiveServerDomain(getAuthorizerAccessTokenResponse.data.token);
+            if (getAppEffectiveServerDomainResponse.errcode != 0)
+            {
+                return BadRequest(getAppEffectiveServerDomainResponse);
+            }
+
+            return Ok(getAppEffectiveServerDomainResponse);
         }
     }
 }

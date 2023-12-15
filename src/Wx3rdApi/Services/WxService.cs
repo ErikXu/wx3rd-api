@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using System;
 using Wx3rdApi.Models.Wx;
 
 namespace Wx3rdApi.Services
@@ -17,6 +18,8 @@ namespace Wx3rdApi.Services
         Task<ModifyThirdpartyServerDomainResponse> ModifyThirdpartyServerDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaServerDomain);
 
         Task<ModifyThirdpartyJumpDomainResponse> ModifyThirdpartyJumpDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaJumpH5Domain);
+
+        Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken);
     }
 
     public class WxService: IWxService
@@ -136,6 +139,20 @@ namespace Wx3rdApi.Services
 
             var modifyThirdpartyJumpDomainResponse = JsonConvert.DeserializeObject<ModifyThirdpartyJumpDomainResponse>(response.Content);
             return modifyThirdpartyJumpDomainResponse;
+        }
+
+        public async Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken)
+        {
+            var url = $"https://api.weixin.qq.com/wxa/get_effective_domain?access_token={authorizerAccessToken}";
+            var request = new RestRequest(url);
+
+            request.AddParameter("application/json", "{}", ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var getEffectiveServerDomainResponse = JsonConvert.DeserializeObject<GetEffectiveServerDomainResponse>(response.Content);
+            return getEffectiveServerDomainResponse;
         }
     }
 }
