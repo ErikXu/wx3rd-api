@@ -9,6 +9,8 @@ namespace Wx3rdApi.Services
         Task<LoginResponse> Login(string host, LoginRequest loginRequest);
 
         Task<GetComponentAccessTokenResponse> GetComponentAccessToken(string host, string jwt);
+
+        Task<ListWeAppResponse> ListWeApp(string host, string jwt, int offset, int limit);
     }
 
     public class Wx3rdService: IWx3rdService
@@ -54,7 +56,7 @@ namespace Wx3rdApi.Services
             var request = new RestRequest(url);
             request.AddHeader("Authorization", string.Format("Bearer {0}", jwt));
 
-            using var restClient = new RestClient(new RestClientOptions { MaxTimeout = 30000 });
+            using var restClient = new RestClient(new RestClientOptions { MaxTimeout = _maxTimeout });
             var response = await restClient.GetAsync(request);
 
             var baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response.Content);
@@ -66,6 +68,31 @@ namespace Wx3rdApi.Services
             else
             {
                 return new GetComponentAccessTokenResponse
+                {
+                    code = baseResponse.code,
+                    errorMsg = baseResponse.errorMsg
+                };
+            }
+        }
+
+        public async Task<ListWeAppResponse> ListWeApp(string host, string jwt, int offset, int limit)
+        {
+            var url = $"{host}/wxcomponent/admin/dev-weapp-list?offset={offset}&limit={limit}";
+            var request = new RestRequest(url);
+            request.AddHeader("Authorization", string.Format("Bearer {0}", jwt));
+
+            using var restClient = new RestClient(new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.GetAsync(request);
+
+            var baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response.Content);
+            if (baseResponse.code == 0)
+            {
+                var listWeAppResponse = JsonConvert.DeserializeObject<ListWeAppResponse>(response.Content);
+                return listWeAppResponse;
+            }
+            else
+            {
+                return new ListWeAppResponse
                 {
                     code = baseResponse.code,
                     errorMsg = baseResponse.errorMsg

@@ -32,7 +32,7 @@ namespace Wx3rdApi.Controllers
         {
             var loginInfo = new LoginInfo
             {
-                Host = form.Host,
+                Host = form.Host.TrimEnd('/'),
                 Username = form.Username,
                 Password = form.Password,
                 PasswordMd5 = form.PasswordMd5
