@@ -19,6 +19,8 @@ namespace Wx3rdApi.Services
 
         Task<ModifyThirdpartyJumpDomainResponse> ModifyThirdpartyJumpDomain(string componentAccessToken, string action, bool isModifyPublishedTogether, string wxaJumpH5Domain);
 
+        Task<GetThirdpartyDomainConfirmFileResponse> GetThirdpartyDomainConfirmFile(string componentAccessToken);
+
         Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken);
     }
 
@@ -139,6 +141,20 @@ namespace Wx3rdApi.Services
 
             var modifyThirdpartyJumpDomainResponse = JsonConvert.DeserializeObject<ModifyThirdpartyJumpDomainResponse>(response.Content);
             return modifyThirdpartyJumpDomainResponse;
+        }
+
+        public async Task<GetThirdpartyDomainConfirmFileResponse> GetThirdpartyDomainConfirmFile(string componentAccessToken)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/component/get_domain_confirmfile?access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            request.AddParameter("application/json", "{}", ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var getThirdpartyDomainConfirmFileResponse = JsonConvert.DeserializeObject<GetThirdpartyDomainConfirmFileResponse>(response.Content);
+            return getThirdpartyDomainConfirmFileResponse;
         }
 
         public async Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken)

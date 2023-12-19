@@ -67,6 +67,28 @@ namespace Wx3rdApi.Controllers
         }
 
         /// <summary>
+        /// 获取第三方平台业务域名校验文件：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/thirdparty-management/domain-mgnt/getThirdpartyJumpDomainConfirmFile.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("3rd/jump/file")]
+        public async Task<IActionResult> GetThirdpartyJumpConfirmFile()
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var getThirdpartyDomainConfirmFileResponse = await _wxService.GetThirdpartyDomainConfirmFile(loginInfo.ComponentAccessToken);
+            if (getThirdpartyDomainConfirmFileResponse.errcode != 0)
+            {
+                return BadRequest(getThirdpartyDomainConfirmFileResponse);
+            }
+
+            return Ok(getThirdpartyDomainConfirmFileResponse);
+        }
+
+        /// <summary>
         /// 获取发布后生效服务器域名列表：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/getEffectiveServerDomain.html
         /// </summary>
         /// <returns></returns>

@@ -32,6 +32,12 @@ namespace Wx3rdApi.Models.Wx
         public string testing_wxa_jump_h5_domain { get; set; }
     }
 
+    public class GetThirdpartyDomainConfirmFileResponse : BaseResponse
+    {
+        public string file_name { get; set; }
+        public string file_content { get; set; }
+    }
+
     public class GetAppDomainForm
     {
         /// <summary>
@@ -40,7 +46,6 @@ namespace Wx3rdApi.Models.Wx
         [Required]
         public string AppId { get; set; }
     }
-
 
     public class GetEffectiveServerDomainResponse : BaseResponse
     {
