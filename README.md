@@ -15,3 +15,20 @@
 
 ![login](img/login.png)
 
+## 部署
+
+部署只依赖 `docker`，需要先安装 `docker`
+
+- 单步执行
+
+``` bash
+bash build.sh
+bash pack.sh
+bash run.sh
+```
+
+- 一键部署
+
+``` bash
+bash all_in_one.sh
+```
