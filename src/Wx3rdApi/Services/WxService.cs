@@ -22,6 +22,8 @@ namespace Wx3rdApi.Services
         Task<GetThirdpartyDomainConfirmFileResponse> GetThirdpartyDomainConfirmFile(string componentAccessToken);
 
         Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken);
+
+        Task<GetBasicInfoResponse> GetAccountBasicInfo(string authorizerAccessToken);
     }
 
     public class WxService: IWxService
@@ -169,6 +171,20 @@ namespace Wx3rdApi.Services
 
             var getEffectiveServerDomainResponse = JsonConvert.DeserializeObject<GetEffectiveServerDomainResponse>(response.Content);
             return getEffectiveServerDomainResponse;
+        }
+
+        public async Task<GetBasicInfoResponse> GetAccountBasicInfo(string authorizerAccessToken)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo?access_token={authorizerAccessToken}";
+            var request = new RestRequest(url);
+
+            request.AddParameter("application/json", "{}", ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var getBasicInfoResponse = JsonConvert.DeserializeObject<GetBasicInfoResponse>(response.Content);
+            return getBasicInfoResponse;
         }
     }
 }
