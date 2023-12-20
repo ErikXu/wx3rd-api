@@ -132,4 +132,23 @@ namespace Wx3rdApi.Models.Wx
 
         public int status { get; set; }
     }
+
+    public class SearchRegisterPersonalMiniProgramForm
+    {
+        /// <summary>
+        /// 任务 Id
+        /// </summary>
+        [Required]
+        public string TaskId { get; set; }
+    }
+
+    public class SearchRegisterPersonalMiniProgramRequest
+    {
+        public string taskid { get; set; }
+    }
+
+    public class SearchRegisterPersonalMiniProgramResponse : BaseResponse
+    {
+
+    }
 }

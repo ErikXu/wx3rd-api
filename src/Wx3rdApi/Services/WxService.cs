@@ -31,6 +31,8 @@ namespace Wx3rdApi.Services
         Task<SearchRegisterMiniProgramResponse> SearchRegisterMiniProgram(string componentAccessToken, SearchRegisterMiniProgramRequest searchRegisterMiniProgramRequest);
 
         Task<RegisterPersonalMiniProgramResponse> RegisterPersonalMiniProgram(string componentAccessToken, RegisterPersonalMiniProgramRequest registerPersonalMiniProgramRequest);
+
+        Task<SearchRegisterPersonalMiniProgramResponse> SearchRegisterPersonalMiniProgram(string componentAccessToken, SearchRegisterPersonalMiniProgramRequest searchRegisterPersonalMiniProgramRequest);
     }
 
     public class WxService: IWxService
@@ -237,6 +239,21 @@ namespace Wx3rdApi.Services
 
             var registerPersonalMiniProgramResponse = JsonConvert.DeserializeObject<RegisterPersonalMiniProgramResponse>(response.Content);
             return registerPersonalMiniProgramResponse;
+        }
+
+        public async Task<SearchRegisterPersonalMiniProgramResponse> SearchRegisterPersonalMiniProgram(string componentAccessToken, SearchRegisterPersonalMiniProgramRequest searchRegisterPersonalMiniProgramRequest)
+        {
+            var url = $"https://api.weixin.qq.com/wxa/component/fastregisterpersonalweapp?action=query&component_access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var body = JsonConvert.SerializeObject(searchRegisterPersonalMiniProgramRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var searchRegisterPersonalMiniProgramResponse = JsonConvert.DeserializeObject<SearchRegisterPersonalMiniProgramResponse>(response.Content);
+            return searchRegisterPersonalMiniProgramResponse;
         }
     }
 }

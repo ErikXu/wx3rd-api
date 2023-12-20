@@ -115,5 +115,34 @@ namespace Wx3rdApi.Controllers
                 return Ok(registerPersonalMiniProgram);
             }
         }
+
+        /// <summary>
+        /// 查询创建个人小程序任务状态：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/register-management/fast-registration-ind/fastRegisterPersonalMp.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("personal")]
+        public async Task<IActionResult> SearchRegisterPersonalMiniProgram([FromQuery] SearchRegisterPersonalMiniProgramForm form)
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var searchRegisterPersonalMiniProgramRequest = new SearchRegisterPersonalMiniProgramRequest
+            {
+                taskid = form.TaskId
+            };
+
+            var searchRegisterPersonalMiniProgramResponse = await _wxService.SearchRegisterPersonalMiniProgram(loginInfo.ComponentAccessToken, searchRegisterPersonalMiniProgramRequest);
+            if (searchRegisterPersonalMiniProgramResponse.errcode != 0)
+            {
+                return BadRequest(searchRegisterPersonalMiniProgramResponse);
+            }
+            else
+            {
+                return Ok(searchRegisterPersonalMiniProgramResponse);
+            }
+        }
     }
 }
