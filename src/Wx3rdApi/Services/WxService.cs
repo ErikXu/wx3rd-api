@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using Wx3rdApi.Models.Wx;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Wx3rdApi.Services
 {
@@ -24,6 +25,8 @@ namespace Wx3rdApi.Services
         Task<GetEffectiveServerDomainResponse> GetAppEffectiveServerDomain(string authorizerAccessToken);
 
         Task<GetBasicInfoResponse> GetAccountBasicInfo(string authorizerAccessToken);
+
+        Task<RegisterMiniProgramResponse> RegisterMiniProgram(string componentAccessToken, RegisterMiniProgramRequest registerMiniProgramRequest);
     }
 
     public class WxService: IWxService
@@ -185,6 +188,21 @@ namespace Wx3rdApi.Services
 
             var getBasicInfoResponse = JsonConvert.DeserializeObject<GetBasicInfoResponse>(response.Content);
             return getBasicInfoResponse;
+        }
+
+        public async Task<RegisterMiniProgramResponse> RegisterMiniProgram(string componentAccessToken, RegisterMiniProgramRequest registerMiniProgramRequest)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=create&component_access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var body = JsonConvert.SerializeObject(registerMiniProgramRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var registerMiniProgramResponse = JsonConvert.DeserializeObject<RegisterMiniProgramResponse>(response.Content);
+            return registerMiniProgramResponse;
         }
     }
 }

@@ -4,7 +4,10 @@ using Wx3rdApi.Services;
 
 namespace Wx3rdApi.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// 基础信息管理
+    /// </summary>
+    [Route("api/info")]
     [ApiController]
     public class InfoController : ControllerBase
     {
