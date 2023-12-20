@@ -53,5 +53,36 @@ namespace Wx3rdApi.Controllers
                 return Ok(registerMiniProgramResponse);
             }
         }
+
+        /// <summary>
+        /// 查询创建企业小程序任务状态：https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/register-management/fast-registration-ent/registerMiniprogram.html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> SearchRegisterMiniProgram([FromQuery] SearchRegisterMiniProgramForm form)
+        {
+            var loginInfo = _authService.GetLoginInfo(Request);
+            if (loginInfo == null)
+            {
+                return Unauthorized();
+            }
+
+            var searchRegisterMiniProgramRequest = new SearchRegisterMiniProgramRequest
+            {
+                name = form.Name,
+                legal_persona_wechat = form.LegalPersonaWechat,
+                legal_persona_name = form.LegalPersonaName
+            };
+
+            var searchRegisterMiniProgramResponse = await _wxService.SearchRegisterMiniProgram(loginInfo.ComponentAccessToken, searchRegisterMiniProgramRequest);
+            if (searchRegisterMiniProgramResponse.errcode != 0)
+            {
+                return BadRequest(searchRegisterMiniProgramResponse);
+            }
+            else
+            {
+                return Ok(searchRegisterMiniProgramResponse);
+            }
+        }
     }
 }

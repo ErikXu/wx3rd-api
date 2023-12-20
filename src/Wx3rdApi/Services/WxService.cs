@@ -27,6 +27,8 @@ namespace Wx3rdApi.Services
         Task<GetBasicInfoResponse> GetAccountBasicInfo(string authorizerAccessToken);
 
         Task<RegisterMiniProgramResponse> RegisterMiniProgram(string componentAccessToken, RegisterMiniProgramRequest registerMiniProgramRequest);
+
+        Task<SearchRegisterMiniProgramResponse> SearchRegisterMiniProgram(string componentAccessToken, SearchRegisterMiniProgramRequest searchRegisterMiniProgramRequest);
     }
 
     public class WxService: IWxService
@@ -203,6 +205,21 @@ namespace Wx3rdApi.Services
 
             var registerMiniProgramResponse = JsonConvert.DeserializeObject<RegisterMiniProgramResponse>(response.Content);
             return registerMiniProgramResponse;
+        }
+
+        public async Task<SearchRegisterMiniProgramResponse> SearchRegisterMiniProgram(string componentAccessToken, SearchRegisterMiniProgramRequest searchRegisterMiniProgramRequest)
+        {
+            var url = $"https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=search&component_access_token={componentAccessToken}";
+            var request = new RestRequest(url);
+
+            var body = JsonConvert.SerializeObject(searchRegisterMiniProgramRequest);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+
+            using var restClient = new RestClient(_httpClientFactory.CreateClient(), new RestClientOptions { MaxTimeout = _maxTimeout });
+            var response = await restClient.ExecuteAsync(request, Method.Post);
+
+            var searchRegisterMiniProgramResponse = JsonConvert.DeserializeObject<SearchRegisterMiniProgramResponse>(response.Content);
+            return searchRegisterMiniProgramResponse;
         }
     }
 }
