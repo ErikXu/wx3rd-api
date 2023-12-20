@@ -40,7 +40,6 @@ namespace Wx3rdApi.Models.Wx
         public string ComponentPhone { get; set; }
     }
 
-
     public class RegisterMiniProgramRequest
     {
         public string name { get; set; }
@@ -94,5 +93,43 @@ namespace Wx3rdApi.Models.Wx
     public class SearchRegisterMiniProgramResponse : BaseResponse
     {
 
+    }
+
+    public class RegisterPersonalMiniProgramForm
+    {
+        /// <summary>
+        /// 个人用户名字
+        /// </summary>
+        [Required]
+        public string IdName { get; set; }
+
+        /// <summary>
+        /// 个人用户微信号
+        /// </summary>
+        [Required]
+        public string WxUser { get; set; }
+
+        /// <summary>
+        /// 第三方联系电话
+        /// </summary>
+        public string ComponentPhone { get; set; }
+    }
+
+    public class RegisterPersonalMiniProgramRequest
+    {
+        public string idname { get; set; }
+
+        public string wxuser { get; set; }
+
+        public string component_phone { get; set; }
+    }
+
+    public class RegisterPersonalMiniProgramResponse : BaseResponse
+    {
+        public string taskid { get; set; }
+
+        public string authorize_url { get; set; }
+
+        public int status { get; set; }
     }
 }
